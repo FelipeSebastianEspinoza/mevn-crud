@@ -1,32 +1,44 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="notification" v-for="(item, i) in items" :key="item._id">
+      <p>
+        <span class="tag is-primary">{{ i + 1 }}</span>
+        {{ item.description }}
+      </p>
     </div>
-    <router-view/>
   </div>
 </template>
 
+<script>
+import axios from "axios";
+export default {
+  name: "App",
+  data() {
+    return {
+      items: [],
+      description: "",
+    };
+  },
+  async mounted() {
+    const response = await axios.get("api/bucketListItems/");
+    this.items = response.data;
+  },
+  methods: {
+    async addItem() {
+      const response = await exios.post("api/bucketListItems/", {
+        description: this.description,
+      });
+      this.items.push(response.data);
+      this.description = "";
+    },
+  },
+};
+</script>
+
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+  margin: auto;
+  margin-top: 3rem;
+  max-width: 700px;
 }
 </style>
