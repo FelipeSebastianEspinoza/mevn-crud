@@ -6,11 +6,13 @@
         <table class="table text-center">
           <thead>
             <tr>
+              <th>id</th>
               <th>description</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in items" :key="item.id">
+              <td v-text="item._id"></td>
               <td v-text="item.description"></td>
             </tr>
           </tbody>
@@ -20,10 +22,8 @@
         <div class="form-group">
           <label>description</label>
           <input v-model="description" type="text" class="form-control" />
-          <!-- este input estará relacionado con la variable description-->
         </div>
-        <button @click="addItem()" class="btn btn-success">Añadir</button
-        ><!--Este botón llama a la función guardar que hemos declarado en la parte script-->
+        <button @click="addItem()" class="btn btn-success">Añadir</button>
       </div>
     </div>
   </div>
@@ -47,18 +47,20 @@ export default {
   methods: {
     async addItem() {
       var item = { description: this.description };
-      const response = await axios
+      await axios
         .post("api/bucketListItems/", {
           description: this.description,
         })
         .then((res) => {
           if (res.status == 200) {
-            this.items.push(item);
+            this.items.push(res.data);
             this.description = "";
-          } 
-        }).catch( error => {
-    console.log( 'función enRechazo invocada: ', error );
-  });
+          }
+        })
+        .catch((error) => {
+          console.log("No se pudo crear el registro");
+          console.log(error);
+        });
     },
     async removeItem(item, i) {
       await axios.delete("api/bucketListItems/" + item._id);

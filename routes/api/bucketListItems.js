@@ -17,17 +17,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const newBucketListItem = new BucketListItem(req.body);
+router.post('/', async (req, res) => {
+  const newBucketListItem = new BucketListItem(req.body)
   try {
-    const bucketListItems = await newBucketListItem.save();
-    if (!bucketListItems)
-      throw new Error("Something went wrong saving the bucketListItem");
-    res.status(200).json(BucketListItem);
+      const bucketListItem = await newBucketListItem.save()
+      if (!bucketListItem) throw new Error('Something went wrong saving the bucketListItem')
+      res.status(200).json(bucketListItem)
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message })
   }
-});
+})
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
